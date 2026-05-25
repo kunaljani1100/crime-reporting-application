@@ -6,6 +6,6 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @Profile("local")
-@PropertySource("classpath:application-local.properties")
+@PropertySource("classpath:application-gcp.properties")
 public class CrimeReportControllerConfig {
 }
