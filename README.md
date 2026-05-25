@@ -72,6 +72,18 @@ Set the following environment variables:
 | `DB_PASSWORD` | Database password | - |
 | `PORT` | Server port | `8080` |
 
+## Health Check
+
+**GET** `/actuator/health`
+
+Returns application health (including database connectivity). Example response when healthy:
+
+```json
+{
+  "status": "UP"
+}
+```
+
 ## Building and Running Locally
 
 ```bash
@@ -81,8 +93,17 @@ Set the following environment variables:
 # Run tests
 ./gradlew test
 
-# Run the application (requires Cloud SQL configuration)
+# Run locally (default profile uses in-memory H2; no GCP credentials needed)
 ./gradlew bootRun
+
+# Verify the app is healthy
+curl http://localhost:8080/actuator/health
+```
+
+To run against Cloud SQL, activate the `gcp` profile and set the database environment variables:
+
+```bash
+./gradlew bootRun --args='--spring.profiles.active=gcp'
 ```
 
 ## Docker
@@ -93,6 +114,7 @@ docker build -t crime-reporting-application .
 
 # Run the container
 docker run -p 8080:8080 \
+  -e SPRING_PROFILES_ACTIVE=gcp \
   -e INSTANCE_CONNECTION_NAME=project:region:instance \
   -e DB_NAME=crime_reports \
   -e DB_USER=postgres \
@@ -112,6 +134,6 @@ gcloud run deploy crime-reporting-application \
   --platform managed \
   --region REGION \
   --add-cloudsql-instances PROJECT_ID:REGION:INSTANCE_NAME \
-  --set-env-vars INSTANCE_CONNECTION_NAME=PROJECT_ID:REGION:INSTANCE_NAME,DB_NAME=crime_reports,DB_USER=postgres,DB_PASSWORD=yourpassword \
+  --set-env-vars SPRING_PROFILES_ACTIVE=gcp,INSTANCE_CONNECTION_NAME=PROJECT_ID:REGION:INSTANCE_NAME,DB_NAME=crime_reports,DB_USER=postgres,DB_PASSWORD=yourpassword \
   --allow-unauthenticated
 ```
