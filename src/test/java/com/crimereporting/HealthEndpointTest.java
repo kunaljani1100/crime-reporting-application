@@ -1,4 +1,4 @@
-package com.crimereporting.controller;
+package com.crimereporting;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

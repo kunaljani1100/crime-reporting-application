@@ -10,6 +10,5 @@ RUN chmod +x gradlew && ./gradlew bootJar --no-daemon
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
-ENV SPRING_PROFILES_ACTIVE=gcp
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
